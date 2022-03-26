@@ -1,6 +1,5 @@
-date_format = "%m/%d/%Y, %H:%M:%S"
-bucket_name = "nfss-primary"
-project_tag = {
-                'Key': 'project',
-                'Value': 'NFSS'
-            }
+class JSONKeys:
+    EMAIL = "EmailId"
+    FIRSTNAME = "FName"
+    LASTNAME = "LName"
+    USERTYPE = "Type"

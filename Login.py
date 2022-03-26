@@ -1,12 +1,13 @@
 from configparser import Error
+
 from logging import error
 from flask import Flask, request, current_app
 from flask_jwt import JWT, jwt_required
-from Files import UserFile
+
 from MySQLProvider import MySQLProvider
 from datetime import datetime
 from secrets import token_urlsafe;
-from S3Handler import S3Handler;
+
 import os, sys;
 from flask_cors import CORS
 import os, tempfile, zipfile
@@ -14,7 +15,7 @@ from Models.User import User
 
 # Initialize mysql and s3 handlers
 mysqlprovider = MySQLProvider()
-s3_handler = S3Handler()
+
 
 # User Object for JWT authentication
 # class User(object):
@@ -146,9 +147,23 @@ def getTokenFromAuthorizationHeader():
 
 @app.route("/user/<username>")
 def get_user_details_by_userId_or_email(username):
-    print(username)
-    reuslt = mysqlprovider.get_user_by_id_or_email(username)
-    return reuslt
+    try:
+        result = mysqlprovider.get_user_by_id_or_email(username)
+        return result
+    except Error as e:
+        return {"message" : e.message}        , 400
+
+
+
+@app.route("/user", methods =["POST"])
+def create_new_user():
+    try:
+        content = request.json
+        result = mysqlprovider.create_user(content)
+        return result
+    except Error as e:
+        print(e.message)
+        return {"message" : e.message}, 409        
 
 @app.route("/pingToken")
 @jwt_required()
@@ -164,6 +179,25 @@ def ping():
         return {'message' : 'success'}, 200
     except Error as e:
         return "Error " + e, 400
+
+
+@app.route("/pingRDS")
+def ping_RDS():
+    try: 
+        result  = mysqlprovider.get_sql_version()
+        if result is not None:          
+            return {'message' : 'success'}, 200
+        else :
+            return  {'message' : 'Cannot connect RDS'}, 500         
+    except Error as e:
+        return "Error " + e, 400        
+
+@app.route("/")
+def home():
+    try:           
+        return {'message' : 'success'}, 200
+    except Error as e:
+        return "Error " + e, 400        
  
 if __name__ == '__main__':
     app.run()

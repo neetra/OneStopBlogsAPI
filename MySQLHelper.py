@@ -7,9 +7,9 @@ def createConnection():
         )#established connection between your database  
         return onestopblog_db   
 
-def closeMysqlconnection(mysql_db : pymysql, my_cursor):
+def closeMysqlconnection(mysql_db : pymysql):
     if mysql_db:
-            mysql_db.close()            
+            mysql_db.close()           
             
             print("MySQL connection is closed")
 

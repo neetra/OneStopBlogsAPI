@@ -2,14 +2,14 @@ from configparser import Error
 from tabnanny import check
 from typing import Tuple
 import mysql.connector 
-from Files import File
 from MySQLHelper import closeMysqlconnection, createConnection
 from datetime import datetime
 import config
-from Helper import get_time_from_string;
 from werkzeug.security import generate_password_hash, check_password_hash
 from mysql.connector.cursor import MySQLCursorDict, MySQLCursorPrepared
 import re
+
+from Constants import JSONKeys
 class MySQLProvider():   
 
     
@@ -35,7 +35,8 @@ class MySQLProvider():
             return False
  
 
-    def get_sql_version(self):
+    def get_sql_version(self, oneStopBlogDbConnection= None):
+        
         try:     
             oneStopBlogDbConnection = createConnection()        
            
@@ -56,7 +57,7 @@ class MySQLProvider():
         except mysql.connector.Error as err:
             print (err)     
         finally:
-            closeMysqlconnection(oneStopBlogDbConnection, my_cursor)                   
+            closeMysqlconnection(oneStopBlogDbConnection)                   
         
         return None
         
@@ -71,39 +72,42 @@ class MySQLProvider():
                 
                     my_cursor.callproc('SP_GetBasicUserDetails', (username,None)) 
                 else:
-                    my_cursor.callproc('SP_GetBasicUserDetails', (None,username))                       
+                    my_cursor.callproc('SP_GetBasicUserDetails', (None,username))   
+
+
          
                 result = my_cursor.fetchone()
-             
+              
            
             return result                
         except mysql.connector.Error as err:
             print (err)
         finally:
-            closeMysqlconnection(oneStopBlogDbConnection, my_cursor)         
+            closeMysqlconnection(oneStopBlogDbConnection)         
         
         return None
 
     def create_user(self, user_l):
-        try:      
+        try: 
             
-            oneStopBlogDbConnection =mysql.connector.connect(host=config.db_host,user=config.db_username,password=config.db_password,database=config.db_database)#established connection between your database   
-            
-            my_cursor=oneStopBlogDbConnection.cursor()    
-            hash_password = generate_password_hash(user_l["password"])    
-            my_cursor.callproc('SP_AddNewUser', (user_l['email'],  user_l['first_name'], user_l['last_name'], hash_password))       
-            oneStopBlogDbConnection.commit()
-            results = my_cursor.stored_results()
-            for result in results:
-                return result.fetchone()
+            oneStopBlogDbConnection = createConnection()     #established connection between your database   
+            result =  None
+            with oneStopBlogDbConnection.cursor() as my_cursor:                
+                
+                my_cursor.callproc('SP_ADDUserDetails', (user_l[JSONKeys.EMAIL],user_l[JSONKeys.FIRSTNAME], user_l[JSONKeys.LASTNAME], user_l[JSONKeys.USERTYPE])) 
+                oneStopBlogDbConnection.commit()
+                result = my_cursor.fetchone()
+                print(result)
+
+            return result                
         except mysql.connector.Error as err:
-            print (err)          
-            
+            return err.msg
         finally:
-            closeMysqlconnection(oneStopBlogDbConnection, my_cursor)  
-        return None    
+            closeMysqlconnection(oneStopBlogDbConnection)         
+        
+        return None
 
 
-mysqlp = MySQLProvider()
-#mysqlp.get_sql_version()   
-mysqlp.get_user_by_id_or_email("amrale.netra@gmail.com")
+# mysqlp = MySQLProvider()
+# #mysqlp.get_sql_version()   
+# mysqlp.get_user_by_id_or_email("amrale.netra@gmail.com")
