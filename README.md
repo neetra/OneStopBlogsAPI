@@ -20,7 +20,7 @@ Cloud Deployment Architecture is [here](output/CloudInfraDiagram.png)
 - S3
 
 
-# Demo is [here](https://drive.google.com/file/d/1GhkvAWqTPVCtJ1DAej4GfA0gsGB8_U8l/view?usp=sharing)
+# Demo is [here]()
 
 # Steps to run locally
 
