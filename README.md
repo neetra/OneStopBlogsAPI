@@ -1,5 +1,5 @@
-# NFSS Service
-NFSS service is REST API, which serves authentication, create new user, upload, edit, view and delete file.
+# One Stop Blog Service
+One Stop Blog service is REST API, which serves authentication, create new user, upload, edit, view and delete blogs.
 Files are stored in Amazon S3.
 
 # Requirements
@@ -11,7 +11,7 @@ Files are stored in Amazon S3.
 
 # AWS Resources
 
-Cloud Deployment Architecture is [here](https://drive.google.com/file/d/120mL-v04F57k35_S9FpJNIjVN69bLTe8/view?usp=sharing).
+Cloud Deployment Architecture is [here](output/CloudInfraDiagram.png)
 - Lambda
 - API Gateway
 - VPC
@@ -42,7 +42,7 @@ Refer [this](https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtuale
 
 
 # Test with postman resources 
-- [here](https://drive.google.com/drive/folders/1uzqRkrUMuRBnzrDTGT3IxTJVim7-nOdZ?usp=sharing) is the postman collection
-- Import the postman collection and environment.
-- Set values of url and token.
+- [here](Output/Postman/Blogs.postman_collection.json) is the postman collection
+- Import the postman collection
+- In enviornment. Set values of url.
 - Refer demo video

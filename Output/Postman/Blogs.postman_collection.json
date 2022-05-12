@@ -1,0 +1,445 @@
+{
+	"info": {
+		"_postman_id": "35f1171e-6137-4561-ad2f-8856711870a6",
+		"name": "Blogs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Get all tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tags",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add tags for user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"tags\" : [\r\n    \"Africa\"\r\n  \r\n\r\n\r\n]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usertags?userId=788991aajs88nas",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usertags"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "788991aajs88nas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get tag by name or id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tag?name=Software",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tag"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Software"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete tags for user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"tags\" : [\r\n    \"Africa\"\r\n  \r\n\r\n\r\n]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usertags?userId=788991aajs88nas",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usertags"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "788991aajs88nas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get tags for user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"tags\" : [\r\n    \"Africa\"\r\n  \r\n\r\n\r\n]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/usertags?userId=788991aajs88nas",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"usertags"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "788991aajs88nas"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserSignup/SignIn",
+			"item": [
+				{
+					"name": "User basic details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"amrale.netra@gmail.com\",\r\n    \"password\": \"pass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creat User With user Id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserId\" : \"78899aajs88nas\",\r\n    \"EmailId\": \"joe0@email.com\",\r\n    \"FName\": \"pass\",\r\n     \"LName\": \"pass\",\r\n     \"Type\":0\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/ping",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ping Authenticate",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/pingToken",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"pingToken"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Blogs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/blogs",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"blogs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all written Blogs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/blogs?userId=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"blogs"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a blog by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/blogs",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"blogs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a blog by id Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/blog?blogId=9683364979641679921",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"blog"
+					],
+					"query": [
+						{
+							"key": "blogId",
+							"value": "9683364979641679921"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Image",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Netrika/Downloads/usecase.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/uploadImage?userId=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"uploadImage"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Blog",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \r\n    \"BlogTitle\": \"My first Blog\",\r\n    \"BlogDescription\": \"description lies here\",\r\n     \"ImageLink\": \"https://one-stop-blogs.s3.us-east-2.amazonaws.com/fZnLfUn9UiuNq3iuPjqnw8_Capture.PNG\",\r\n     \"ThumbnailLink\":\"https://one-stop-blogs.s3.us-east-2.amazonaws.com/fZnLfUn9UiuNq3iuPjqnw8_Capture.PNG\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/blog?userId=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"blog"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creat User without Id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{    \r\n    \"EmailId\": \"joe80@email.com\",\r\n    \"FName\": \"pass\",\r\n     \"LName\": \"pass\",\r\n     \"Type\":0    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
