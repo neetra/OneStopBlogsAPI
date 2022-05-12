@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS `onestopblogs`.`Users` (
     ON UPDATE NO ACTION
 );
 
+alter table Users modify column user_id varchar(255);
+
 
 
 CREATE TABLE IF NOT EXISTS `onestopblogs`.`tags` (
@@ -35,19 +37,40 @@ CREATE TABLE IF NOT EXISTS `onestopblogs`.`tags` (
 
 CREATE TABLE IF NOT EXISTS `onestopblogs`.`UsersTags` (
   `tag_id` INT NOT NULL,
-  `user_id` INT NOT NULL,    
-  PRIMARY KEY (`tag_id`, `user_id`),
-   CONSTRAINT `fk_users_tag`
+  `user_id` varchar(255),     
     FOREIGN KEY (`tag_id`)
     REFERENCES `onestopblogs`.`tags` (`tag_id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-     CONSTRAINT `fk_users`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `onestopblogs`.`Users` (`User_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION 
+    ON UPDATE NO ACTION
+   
 );
+
+alter table UsersTags add constraint foreign key (user_id) REFERENCES Users(user_id);
+
+CREATE TABLE IF NOT EXISTS `onestopblogs`.`Blogs` (
+  `Blog_id` INT NOT NULL AUTO_INCREMENT,
+  `blog_title` tinytext not null,
+   `blog_description` mediumtext not null, 
+    `image_link` varchar(255) , 
+     `Thumbnail` varchar(255) , 
+  PRIMARY KEY (`Blog_id`)
+);
+
+alter table Blogs modify Blog_id varchar(255);
+
+CREATE TABLE IF NOT EXISTS `onestopblogs`.`WrittenBlogs` (
+  `blog_id` varchar(255) not null,
+  `user_id` varchar(255) not null,
+	Primary key ( `user_id`,   `blog_id` ),
+   FOREIGN KEY (`Blog_id`)
+REFERENCES `onestopblogs`.`Blogs` (`Blog_id`),
+   FOREIGN KEY (`user_id`)
+REFERENCES `onestopblogs`.`Users` (`user_id`)
+
+);
+
+
+
 
 
 

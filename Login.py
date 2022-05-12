@@ -1,8 +1,10 @@
 from configparser import Error
 
+
 from logging import error
-from flask import Flask, request, current_app
+from flask import Flask, request, current_app, jsonify
 from flask_jwt import JWT, jwt_required
+from pymysql import IntegrityError
 
 from MySQLProvider import MySQLProvider
 from datetime import datetime
@@ -12,6 +14,7 @@ import os, sys;
 from flask_cors import CORS
 import os, tempfile, zipfile
 from Models.User import User
+from S3Handler import S3Handler
 
 # Initialize mysql and s3 handlers
 mysqlprovider = MySQLProvider()
@@ -45,36 +48,37 @@ def make_payload(identity):
         }  
 
 def authenticate(username, password):
+   
+    # Get userdetails from mysql
+    user = mysqlprovider.get_user_by_id_or_email(username)
+    if(user is None):
+        return "Unauthorized user"            
 
-    user = User()
-    user.email = "amrale.netra@gmail.com"
-    user.firstName = "Netra"
-    user.lastName ="Amrale"
-    user.type = 1
-    user.userId = 1
-    return user
-    # # Get userdetails from mysql
-    # #user = mysqlprovider.check_user(username, password)
-    # if(user is None):
-    #     return "Unauthorized user"            
-                
-    # return User(user['user_id'], user['email'], user['first_name'], user['last_name'], user['role_id'])
+    userObj = User()
+    userObj.email = user["Email"]
+    userObj.firstName = user["firstName"]
+    userObj.lastName = user["lastName"]
+    userObj.type = user["typeId"]
+    userObj.userId = user["userId"]    
+    return userObj
 
 # This is called when jwt-required
 def identity(payload):
     user_id = payload['userId']
-    #user = mysqlprovider.get_user_by_username_or_id("", user_id)
-    user = User()
-    user.Email = "amrale.netra@gmail.com"
-    user.firstName = "Netra"
-    user.lastName ="Amrale"
-    user.Type = 1
-    user.userId = 1
+    user = mysqlprovider.get_user_by_id_or_email(user_id)
+
     
     if (user is None):
         return None  
 
-    return user          
+    userObj = User()
+    userObj.email = user["Email"]
+    userObj.firstName = user["firstName"]
+    userObj.lastName = user["lastName"]
+    userObj.type = user["typeId"]
+    userObj.userId = user["userId"]    
+    return userObj;
+          
 
 # Initialise Flask APP
 app = Flask(__name__)
@@ -161,6 +165,8 @@ def create_new_user():
         content = request.json
         result = mysqlprovider.create_user(content)
         return result
+    except IntegrityError as e:
+        return {"message" : e.args[1]}, 409        
     except Error as e:
         print(e.message)
         return {"message" : e.message}, 409        
@@ -197,7 +203,112 @@ def home():
     try:           
         return {'message' : 'success'}, 200
     except Error as e:
-        return "Error " + e, 400        
+        return "Error " + e, 400  
+
+
+@app.route("/tags")
+def get_tags()              :
+    try:
+       
+        result = mysqlprovider.get_tags()
+        return jsonify(result)
+    except IntegrityError as e:
+        return {"message" : e.args[1]}, 409        
+    except Error as e:
+        print(e.message)
+        return {"message" : e.message}, 409   
  
+@app.route("/tag", methods = ["GET"])
+def get_tag()              :
+    try:
+        if request.method == "GET":
+            param= request.args['name']
+
+            result = mysqlprovider.get_tag(param)
+            return jsonify(result)
+    except IntegrityError as e:
+        return {"message" : e.args[1]}, 409        
+    except Error as e:
+        print(e.message)
+        return {"message" : e.message}, 409   
+
+ 
+@app.route("/uploadImage", methods = ["POST"])
+def upload_image()              :
+    try:
+        if request.method == "POST":
+            f = request.files['file']
+            s3handler = S3Handler();
+            url = s3handler.upload_file(f, f.mimetype)
+            #result = mysqlprovider.get_tag(param)
+            return jsonify({"imageLink": url})
+    except IntegrityError as e:
+        return {"message" : e.args[1]}, 409        
+    except Error as e:
+        print(e.message)
+        return {"message" : e.message}, 409   
+
+@app.route("/blog", methods = ["POST", "GET", "DELETE"])
+def operations_blog()              :
+    try:
+        if request.method == "POST":
+            jsonData = request.json
+            param= request.args.get('userId')
+            result = mysqlprovider.add_blog(jsonData, param)
+            return jsonify(result)
+        elif request.method == "GET":
+            param= request.args['blogId']            
+            result = mysqlprovider.get_blog_by_id(param)
+            return jsonify(result)
+        elif request.method == "DELETE":
+            param= request.args['blogId']            
+            mysqlprovider.delete_blog_by_id(param)
+            msg = "Successfully deleted the blog with id : " + param 
+            return jsonify({"message" :msg})            
+    except IntegrityError as e:
+        return {"message" : e.args[1]}, 409        
+    except Error as e:
+        print(e.message)
+        return {"message" : e.message}, 409   
+
+@app.route("/blogs", methods = ["GET"])
+def get_all_blogs()              :
+    try:
+        if request.method == "GET":  
+            userId = request.args.get('userId')
+            if userId is not None:
+                result = mysqlprovider.get_written_blogs(userId=userId)      
+            else:
+              result = mysqlprovider.get_all_blogs()
+            return jsonify(result)
+    except IntegrityError as e:
+        return {"message" : e.args[1]}, 409        
+    except Error as e:
+        print(e.message)
+        return {"message" : e.message}, 409   
+
+@app.route("/usertags", methods = ["POST", "DELETE", "GET"])
+def user_tags()              :
+    try:
+        if request.method == "POST":
+            param= request.args['userId']
+            tags = request.json
+            result = mysqlprovider.add_tags_for_user( tags, param)
+            return jsonify({param : result})
+        if request.method == "DELETE":
+            param= request.args['userId']
+            tags = request.json
+            result = mysqlprovider.delete_tags_for_user( tags, param)
+            return jsonify({param : result})
+        if request.method == "GET":
+            param= request.args['userId']            
+            result = mysqlprovider.get_tags_for_user( param)
+            return jsonify({param : result})
+    except IntegrityError as e:
+        return {"message" : e.args[1]}, 409        
+    except Error as e:
+        print(e.message)
+        return {"message" : e.message}, 409   
+        
 if __name__ == '__main__':
     app.run()

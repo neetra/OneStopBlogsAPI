@@ -3,3 +3,8 @@ class JSONKeys:
     FIRSTNAME = "FName"
     LASTNAME = "LName"
     USERTYPE = "Type"
+    USERID = "UserId"
+    BLOGTITLE = "BlogTitle"
+    BLOGDESCRIPTION = "BlogDescription"
+    IMAGELINK ="ImageLink"
+    THUMBNAILlINK ="ThumbnailLink"
