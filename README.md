@@ -11,7 +11,8 @@ Files are stored in Amazon S3.
 
 # AWS Resources
 
-Cloud Deployment Architecture is [here](output/CloudInfraDiagram.png)
+Cloud Deployment Architecture is 
+![here](Output/CloudInfraDiagram.png)
 - Lambda
 - API Gateway
 - VPC
